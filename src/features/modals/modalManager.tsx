@@ -1,0 +1,35 @@
+import React, { FC } from "react";
+import { connect } from "react-redux";
+import { IModalManagerProps } from "./Entity/modal";
+import { IApplicationState } from "../../app/store/configureStore";
+import LoginModal from "./LoginModal";
+import RegisterModal from "./RegisterModal";
+import TestModal from "./TestModal";
+
+const modalLookUp: any = {
+  TestModal: TestModal,
+  LoginModal: LoginModal,
+  RegisterModal: RegisterModal
+};
+//export const ModalManager= (props:any) => {
+export const ModalManager: FC<IModalManagerProps> = props => {
+  const { currentModal } = props;
+
+  console.log(currentModal);
+  let renderedModal = null;
+  if (currentModal) {
+    const { modalProps } = currentModal;
+    const ModalComponent = modalLookUp['TestModal'];
+    renderedModal = <ModalComponent {...modalProps} />;
+  }
+
+  return <span>{renderedModal}</span>;
+};
+
+const mapStateToProps = (store: IApplicationState) => {
+  return {
+    currentModal: store.modals.modal
+  };
+};
+
+export default connect(mapStateToProps)(ModalManager);
